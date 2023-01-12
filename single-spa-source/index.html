@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- <a href="#/app1">应用1</a>
+  <a href="#/app2">应用2</a> -->
+  <a onclick="a()">应用1</a>
+  <a onclick="b()">应用2</a>
+  <script src="/lib/umd/single-spa.js"></script>
+  <script>
+
+    function a() {
+      history.pushState({ state: '状态参数' }, 'title', '/a')
+    }
+
+    function b() {
+      history.pushState({ state: '状态参数' }, 'title', '/b')
+    }
+    // 参数1. 注册应用的名字
+    // 参数2. 加载app的方法必须是放回一个promise方法
+    // 类似于prefetch
+    singleSpa.registerApplication('app1', async (props) => {
+      // 这个函数需要返回一个结果
+      console.log('加载时执行')
+      return {
+        // bootstrap: async (props) => {
+        //   console.log('bootstrap')
+        // },
+        bootstrap: [async (props) => {
+          console.log('bootstrap1')
+        }, async (props) => {
+          console.log('bootstrap1-2')
+        }],
+        mount: async (props) => {
+          console.log('mount')
+        },
+        unmount: async (props) => {
+          console.log('unmount')
+        },
+      }
+
+    },
+      location => location.pathname.startsWith('/a'),
+      // location.hash.startsWith('#/app2')
+      {
+        store: {
+          name: 'droden',
+        }
+      }
+    )
+
+    singleSpa.registerApplication('app2', async (props) => {
+      // 这个函数需要返回一个结果
+      console.log('加载时执行2')
+      return {
+        bootstrap: async (props) => {
+          console.log('bootstrap22')
+        },
+        mount: async (props) => {
+          console.log('mount2')
+        },
+        unmount: async (props) => {
+          console.log('unmount2')
+        },
+      }
+
+    },
+      location => location.pathname.startsWith('/b'),
+      {
+        store: {
+          name: 'droden2',
+        }
+      }
+    )
+    // location方法匹配了,registerApplication会加载这个应用
+    // 启动这个应用
+    // singleSpa.start()
+    singleSpa.start() //会挂载应用
+    window.addEventListener('hashChange', () => {
+      console.log('原生 hashChage')
+    })
+  </script>
+</body>
+
+</html>

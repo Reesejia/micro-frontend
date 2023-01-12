@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <p>hello world</p>
+  <div id="shadow"></div>
+  <script>
+    const shadowDOM = shadow.attachShadow({ mode: 'closed' });//外界无法访问shadowDOM
+    // open 可以让外界访问
+    let pElm = document.createElement('p')
+    pElm.innerHTML = 'droden'
+    let styleEle = document.createElement('style')
+    styleEle.textContent = `
+            p {color: red}
+        `
+    /**
+     * 这里的样式虽然写的是p标签,但是没有作用到外层去
+    */
+    shadowDOM.appendChild(pElm)
+    shadowDOM.appendChild(styleEle)
+
+  </script>
+</body>
+
+</html>
